@@ -9,6 +9,12 @@ the dataset (SR28) into the Django-managed database.
 This packaged has only been tested with Python 3.5 and Django 1.9, but should
 work with other versions. Feel free to submit pull requests for compatibility.
 
+## Install
+
+Install from `pip`:
+
+    pip install django-usda-nutrition
+
 ## Notes
 
 - The USDA database includes comprehensive information on how all nutritional
