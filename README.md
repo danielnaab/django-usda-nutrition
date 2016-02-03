@@ -15,6 +15,12 @@ Install from `pip`:
 
     pip install django-usda-nutrition
 
+## Usage
+
+Add `usda_nutrition` to your `INSTALLED_APPS` and then:
+
+    ./manage.py import_usda
+
 ## Notes
 
 - The USDA database includes comprehensive information on how all nutritional

@@ -9,4 +9,4 @@ class TestImportCommand(TestCase):
         unhandled exceptions raised.
         TODO: Don't be so stupid.
         """
-        call_command('import_db')
+        call_command('import_usda')
