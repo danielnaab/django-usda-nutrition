@@ -16,19 +16,13 @@ class FoodGroup(models.Model):
 
 
 class FoodDescription(models.Model):
-    """
-    self.create_table_stmt["food_des"] = '''DROP TABLE IF EXISTS food_des; CREATE TABLE food_des
-                                (NDB_No text, FdGrp_Cd, Long_Desc, Shrt_Desc, ComName, ManufacName, Survey,
-                                Ref_desc, Refuse, SciName, N_Factor, Pro_Factor, Fat_Factor, CHO_Factor);
-                                CREATE UNIQUE INDEX food_des_ndb_no_idx ON food_des (NDB_No)'''
-    """
     ndb_no = models.CharField(max_length=5, primary_key=True, help_text='5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.')
     food_group = models.ForeignKey(FoodGroup, help_text='4-digit code indicating food group to which a food item belongs.')
     long_desc = models.CharField(max_length=200, help_text='200-character description of food item.')
     short_desc = models.CharField(max_length=60, help_text='60-character abbreviated description of food item. Generated from the 200-character description using abbreviations in Appendix A. If short description is longer than 60 characters, additional abbreviations are made.')
     com_name = models.CharField(max_length=100, null=True, blank=True, help_text='Other names commonly used to describe a food, including local or regional names for various foods, for example, “soda” or “pop” for “carbonated beverages.”')
     manufacturer_name = models.CharField(max_length=65, null=True, blank=True, help_text='Indicates the company that manufactured the product, when appropriate.')
-    survey = models.BooleanField(null=True, blank=True, help_text='Indicates if the food item is used in the USDA Food and Nutrient Database for Dietary Studies (FNDDS) and thus has a complete nutrient profile for the 65 FNDDS nutrients.')
+    survey = models.NullBooleanField(help_text='Indicates if the food item is used in the USDA Food and Nutrient Database for Dietary Studies (FNDDS) and thus has a complete nutrient profile for the 65 FNDDS nutrients.')
     refuse_description = models.CharField(max_length=135, null=True, blank=True, help_text='Description of inedible parts of a food item (refuse), such as seeds or bone.')
     refuse = models.PositiveSmallIntegerField(null=True, blank=True, help_text='Percentage of refuse.')
     scientific_name = models.CharField(max_length=65, null=True, blank=True, help_text='Scientific name of the food item. Given for the least processed form of the food (usually raw), if applicable.')
@@ -90,7 +84,7 @@ class Weight(models.Model):
 #     source_code = models.ForeignKey(SourceCode, help_text='Code indicating type of data.')
 #     derivation_code = models.ForeignKey(DerivationCode, blank=True, null=True, help_text='Data Derivation Code giving specific information on how the value is determined. This field is populated only for items added or updated starting with SR14. This field may not be populated if older records were used in the calculation of the mean value.')
 #     ref_food_description = models.ForeignKey(FoodDescription, blank=True, null=True, help_text='NDB number of the item used to calculate a missing value. Populated only for items added or updated starting with SR14.')
-#     add_nutr_mark = models.BooleanField(null=True, blank=True, help_text='Indicates a vitamin or mineral added for fortification or enrichment. This field is populated for ready-to- eat breakfast cereals and many brand-name hot cereals in food group 08.')
+#     add_nutr_mark = models.NullBooleanField(help_text='Indicates a vitamin or mineral added for fortification or enrichment. This field is populated for ready-to- eat breakfast cereals and many brand-name hot cereals in food group 08.')
 #     num_studies = models.PositiveSmallIntegerField(null=True, blank=True, help_text='Number of studies.')
 #     minimum = models.DecimalField(max_digits=13, decimal_places=3, help_text='Minimum value.')
 #     maximum = models.DecimalField(max_digits=13, decimal_places=3, help_text='Maximum value.')
