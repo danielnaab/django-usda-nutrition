@@ -1,15 +1,15 @@
 # django-usda-nutrition
 
-NOTE: [django-usda](https://github.com/notanumber/django-usda) also exists,
-and has been tested more than this package.
-
 This is a Django application which includes models corresponding to the USDA
 Nutrition Database, as well as import scripts to pull the current version of
 the dataset (SR28) into the Django-managed database.
 
+NOTE: [django-usda](https://github.com/notanumber/django-usda) also exists,
+but imports an older (SR22) dataset.
+
 ## Dependencies
 
-This packaged has only been tested with Python 3.5 and Django 1.9, but should
+This packaged has only been tested with Python 3.5+ and Django 1.9+, but should
 work with other versions. Feel free to submit pull requests for compatibility.
 
 ## Install
