@@ -2,8 +2,8 @@ import csv
 import os
 import sys
 
-from django.db import models
-from django.core.management.base import BaseCommand, CommandError
+from django.db import models, transaction
+from django.core.management.base import BaseCommand
 
 from usda_nutrition import models as usda
 
@@ -99,9 +99,13 @@ def import_file(filename, model_cls, field_list):
     print('Done!')
 
 
+@transaction.atomic
+def run():
+    for info in INPUT_FILES:
+        import_file(info['filename'], info['model'], info['fields'])
+
 class Command(BaseCommand):
     help = 'Imports the USDA Nutrition Database (version SR28)'
 
     def handle(self, *args, **options):
-        for info in INPUT_FILES:
-            import_file(info['filename'], info['model'], info['fields'])
+        run()
