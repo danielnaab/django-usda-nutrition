@@ -14,6 +14,9 @@ class FoodGroup(models.Model):
     code = models.CharField(max_length=4, primary_key=True, help_text='4-digit code identifying a food group. Only the first 2 digits are currently assigned. In the future, the last 2 digits may be used. Codes may not be consecutive.')
     description = models.CharField(max_length=60, help_text='Name of food group.')
 
+    def __str__(self):
+        return self.description
+
 
 class FoodDescription(models.Model):
     ndb_no = models.CharField(max_length=5, primary_key=True, help_text='5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.')
@@ -31,6 +34,8 @@ class FoodDescription(models.Model):
     fat_factor = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True, help_text='Factor for calculating calories from fat (see p. 14).')
     cho_factor = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True, help_text='Factor for calculating calories from carbohydrate (see p. 14).')
 
+    def __str__(self):
+        return self.short_desc
 
 
 class NutrientDefinition(models.Model):
@@ -41,32 +46,46 @@ class NutrientDefinition(models.Model):
     num_decimal_places = models.CharField(max_length=1, help_text='Number of decimal places to which a nutrient value is rounded.')
     sort_order = models.PositiveSmallIntegerField(help_text='Used to sort nutrient records in the same order as various reports produced from SR.')
 
+    def __str__(self):
+        return self.nutrient_description
+
 
 FOOTNOTE_CHOICES = (
     ('D', 'footnote adding information to the food description'),
     ('M', 'footnote adding information to measure description'),
     ('N', 'footnote providing additional information on a nutrient value. If the Footnt_typ = N, the Nutr_No will also be filled in.')
 )
+
+
 class Footnote(models.Model):
-    food_description = models.ForeignKey(FoodDescription, help_text='5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.')
+    food_description = models.ForeignKey(FoodDescription, related_name='footnotes', help_text='5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.')
     footnote_no = models.CharField(max_length=4, help_text='Sequence number. If a given footnote applies to more than one nutrient number, the same footnote number is used. As a result, this file cannot be indexed and there is no primary key.')
     footnote_type = models.CharField(max_length=1, help_text='Type of footnote.', choices=FOOTNOTE_CHOICES)
     nutrient_definition = models.ForeignKey(NutrientDefinition, null=True, help_text='Unique 3-digit identifier code for a nutrient to which footnote applies.')
     footnote_text = models.CharField(max_length=200, help_text='Footnote text.')
+
+    def __str__(self):
+        return '%s: %s' % (self.footnote_no, self.footnote_text)
 
 
 class SourceCode(models.Model):
     source_code = models.CharField(primary_key=True, max_length=2, help_text='A 2-digit code indicating type of data.')
     description = models.CharField(max_length=60, help_text='Description of source code that identifies the type of nutrient data.')
 
+    def __str__(self):
+        return '%s: %s' % (self.source_code, self.description)
+
 
 class DerivationCode(models.Model):
     code = models.CharField(max_length=4, primary_key=True, help_text='Derivation Code.')
     description = models.CharField(max_length=120, help_text='Description of derivation code giving specific information on how the value was determined.')
 
+    def __str__(self):
+        return self.code
+
 
 class Weight(models.Model):
-    food_description = models.ForeignKey(FoodDescription, help_text='5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.')
+    food_description = models.ForeignKey(FoodDescription, related_name='weights', help_text='5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.')
     sequence = models.PositiveSmallIntegerField(help_text='Sequence number.')
     amount = models.DecimalField(max_digits=8, decimal_places=3, help_text='Unit modifier (for example, 1 in “1 cup”).')
     measure_description = models.CharField(max_length=84, help_text='Description (for example, cup, diced, and 1-inch pieces).')
@@ -74,9 +93,12 @@ class Weight(models.Model):
     number_data_points = models.PositiveSmallIntegerField(blank=True, null=True, help_text='Number of data points.')
     standard_deviation = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True, help_text='Standard deviation.')
 
+    def __str__(self):
+        return '%s %s %s' % (self.amount, self.measure_description, self.food_description)
+
 
 # class NutrientData(models.Model):
-#     food_description = models.ForeignKey(FoodDescription, help_text='5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.')
+#     food_description = models.ForeignKey(FoodDescription, related_name='nutrient_data', help_text='5-digit Nutrient Databank number that uniquely identifies a food item. If this field is defined as numeric, the leading zero will be lost.')
 #     nutrient_definition = models.ForeignKey(NutrientDefinition, help_text='Unique 3-digit identifier code for a nutrient.')
 #     nutrient_value = models.DecimalField(max_digits=13, decimal_places=3, help_text='Amount in 100 grams, edible portion. (Nutrient values have been rounded to a specified number of decimal places for each nutrient. Number of decimal places is listed in the Nutrient Definition file.)')
 #     number_data_points = models.PositiveSmallIntegerField(help_text='Number of data points is the number of analyses used to calculate the nutrient value. If the number of data points is 0, the value was calculated or imputed.')
