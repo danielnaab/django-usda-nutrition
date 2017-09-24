@@ -21,11 +21,5 @@ if not settings.configured:
     )
 
 
-def runtests():
-    #argv = sys.argv[:1] + ['makemigrations'] + sys.argv[1:]
-    #execute_from_command_line(['makemigrations'])
-    execute_from_command_line(sys.argv)
-
-
 if __name__ == '__main__':
-    runtests()
+    execute_from_command_line(sys.argv)
