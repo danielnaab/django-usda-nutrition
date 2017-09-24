@@ -1,6 +1,11 @@
 import csv
 import os
 import sys
+if (sys.version_info < (3, 0)):
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+
+import io
 
 from django.db import models, transaction
 from django.core.management.base import BaseCommand
@@ -85,7 +90,7 @@ def import_file(filename, model_cls, field_list):
     sys.stdout.flush()
 
     path = os.path.join(DATA_DIR, filename)
-    with open(path, encoding='cp1252') as csvfile:
+    with io.open(path, encoding='cp1252') as csvfile:
         new_instances = []
         reader = csv.reader(csvfile, delimiter='^', quotechar='~')
         for row in reader:

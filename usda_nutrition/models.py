@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 """
 Models corresponding to the USDA Nutritional Database tables.
 
