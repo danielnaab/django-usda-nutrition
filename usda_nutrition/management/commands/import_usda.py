@@ -70,7 +70,7 @@ INPUT_FILES = (
 
 def value_for_field(field, value):
     # Convert Y/N into a boolean.
-    if type(field) == models.BooleanField:
+    if type(field) in [models.BooleanField, models.NullBooleanField]:
         return {
             'Y': True,
             'N': False,
